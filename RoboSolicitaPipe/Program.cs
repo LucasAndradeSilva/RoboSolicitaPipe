@@ -4,7 +4,7 @@ using RoboSolicitaPipe.Models;
 
 Console.Title = "Robo Solicita Pipe Itau";
 
-ConsoleColorHelper.ConsoleWrite("Robo Solicita Pepi Itau iniciado...");
+ConsoleColorHelper.ConsoleWrite("Robo Solicita Pipe Itau iniciado...");
 ConsoleColorHelper.ConsoleWrite("Lendo arquivo de configuração");
 
 var pathSettings = Path.Combine(Environment.CurrentDirectory, "appsettings.json");
@@ -17,20 +17,13 @@ var defaultUrlPipe = "https://itau.pipefy.com/public_api";
 var tasks = new Task[6];
 
 try
-{    
-    //tasks[0] = Task.Run(() => SoliciataReativacaoCota());
-    //tasks[1] = Task.Run(() => SolicitacaoExtratos());
-    //tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
-    //tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
-    //tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
-    //tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
-
-    SoliciataReativacaoCota();
-    SolicitacaoExtratos();
-    SolicitacaoAlteracaoValorCarta();
-    SolicitacaoBoletoLance();
-    SolicitacaoFaturamentoEspecie();
-    SolicitacaoFaturamentoCotaExcluidaGE();
+{
+    tasks[0] = Task.Run(() => SoliciataReativacaoCota());
+    tasks[1] = Task.Run(() => SolicitacaoExtratos());
+    tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
+    tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
+    tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
+    tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
 
     Task.WhenAll(tasks).Wait();
 }
@@ -39,6 +32,9 @@ catch (Exception e)
 
     ConsoleColorHelper.ConsoleWriteException(e);
 }
+
+ConsoleColorHelper.ConsoleWrite("Robo Solicita Pipe Itau finalizado...");
+
 void SoliciataReativacaoCota()
 {
     try
@@ -49,7 +45,10 @@ void SoliciataReativacaoCota()
         ConsoleColorHelper.ConsoleWrite($"Reativação de cota: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateDefaultPublicFormJson("", "", "", "");
+            #if DEBUG
+                dado[0] = "claudia.passos@consorciei.com.br";
+            #endif
+            var body = GenerateDefaultPublicFormJson("Reativação de cota", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
         ConsoleColorHelper.ConsoleWrite($"Reativação de cota: finalizado");
@@ -71,7 +70,9 @@ void SolicitacaoExtratos()
         ConsoleColorHelper.ConsoleWrite($"Solicitação de Extratos: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            dado[0] = "claudia.passos@consorciei.com.br";
+            #if DEBUG
+                dado[0] = "claudia.passos@consorciei.com.br";
+            #endif
             var body = GenerateDefaultPublicFormJson("Extrato", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -93,7 +94,11 @@ void SolicitacaoAlteracaoValorCarta()
         ConsoleColorHelper.ConsoleWrite($"Alteração do valor da carta: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateValorCartaPublicFormJson("Alteração do valor da carta", dado[0], dado[1], dado[2], dado[3], dado[4], dado[5]);
+#if DEBUG
+            dado[0] = "claudia.passos@consorciei.com.br";
+            dado[2] = "100";
+#endif
+            var body = GenerateValorCartaPublicFormJson("Alteração do valor da carta", dado[0], dado[1], dado[5], dado[2], dado[3], dado[4]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
 
@@ -116,6 +121,9 @@ void SolicitacaoBoletoLance()
         ConsoleColorHelper.ConsoleWrite($"Boleto de lance: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
+#if DEBUG
+            dado[0] = "claudia.passos@consorciei.com.br";
+#endif
             var body = GenerateDefaultPublicFormJson("Boleto de lance", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -134,13 +142,16 @@ void SolicitacaoFaturamentoEspecie()
     try
     {
         ConsoleColorHelper.ConsoleWrite("Iniciando metodo: Faturamente em especie");
-        var dadosExcel = pathExcel.LerArquivoExcel("Faturamente em especie");
-
+        var dadosExcel = pathExcel.LerArquivoExcel("Faturamente em especie ");
 
         ConsoleColorHelper.ConsoleWrite($"Faturamente em especie: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateFaturamentePublicFormJson("Faturamente em especie", dado[0], dado[1], dado[2], dado[3], dado[4], dado[5]);
+#if DEBUG
+            dado[0] = "claudia.passos@consorciei.com.br";
+            dado[2] = "100";            
+#endif
+            var body = GenerateFaturamentePublicFormJson("Faturamento em espécie", dado[0], dado[1], dado[3], dado[2], dado[4], dado[5]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
 
@@ -163,7 +174,10 @@ void SolicitacaoFaturamentoCotaExcluidaGE()
         ConsoleColorHelper.ConsoleWrite($"Faturamento cota excluída GE: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateDefaultPublicFormJson("Faturamento cota excluída GE", dado[0], dado[1], dado[2]);
+#if DEBUG
+            dado[0] = "claudia.passos@consorciei.com.br";
+#endif
+            var body = GenerateDefaultPublicFormJson("Faturamento Cota Excluída/ Grupo encerrado", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
 
