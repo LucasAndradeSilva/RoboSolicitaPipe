@@ -45,9 +45,6 @@ void SoliciataReativacaoCota()
         ConsoleColorHelper.ConsoleWrite($"Reativação de cota: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            #if DEBUG
-                dado[0] = "claudia.passos@consorciei.com.br";
-            #endif
             var body = GenerateDefaultPublicFormJson("Reativação de cota", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -70,9 +67,6 @@ void SolicitacaoExtratos()
         ConsoleColorHelper.ConsoleWrite($"Solicitação de Extratos: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            #if DEBUG
-                dado[0] = "claudia.passos@consorciei.com.br";
-            #endif
             var body = GenerateDefaultPublicFormJson("Extrato", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -94,10 +88,6 @@ void SolicitacaoAlteracaoValorCarta()
         ConsoleColorHelper.ConsoleWrite($"Alteração do valor da carta: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-#if DEBUG
-            dado[0] = "claudia.passos@consorciei.com.br";
-            dado[2] = "100";
-#endif
             var body = GenerateValorCartaPublicFormJson("Alteração do valor da carta", dado[0], dado[1], dado[5], dado[2], dado[3], dado[4]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -121,9 +111,6 @@ void SolicitacaoBoletoLance()
         ConsoleColorHelper.ConsoleWrite($"Boleto de lance: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-#if DEBUG
-            dado[0] = "claudia.passos@consorciei.com.br";
-#endif
             var body = GenerateDefaultPublicFormJson("Boleto de lance", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -147,10 +134,6 @@ void SolicitacaoFaturamentoEspecie()
         ConsoleColorHelper.ConsoleWrite($"Faturamente em especie: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-#if DEBUG
-            dado[0] = "claudia.passos@consorciei.com.br";
-            dado[2] = "100";            
-#endif
             var body = GenerateFaturamentePublicFormJson("Faturamento em espécie", dado[0], dado[1], dado[3], dado[2], dado[4], dado[5]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
@@ -174,9 +157,6 @@ void SolicitacaoFaturamentoCotaExcluidaGE()
         ConsoleColorHelper.ConsoleWrite($"Faturamento cota excluída GE: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-#if DEBUG
-            dado[0] = "claudia.passos@consorciei.com.br";
-#endif
             var body = GenerateDefaultPublicFormJson("Faturamento Cota Excluída/ Grupo encerrado", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
         }
