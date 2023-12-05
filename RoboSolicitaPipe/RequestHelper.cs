@@ -43,7 +43,7 @@ namespace RoboSolicitaPipe
                 // Ler e desserializar o conteúdo da resposta
                 string conteudoResposta = await resposta.Content.ReadAsStringAsync();
                 TResposta resultado = conteudoResposta.DeserializeJson<TResposta>();
-
+                
                 return resultado;
             }
         }

@@ -1,6 +1,7 @@
 ﻿
 using RoboSolicitaPipe;
 using RoboSolicitaPipe.Models;
+using System.Text.Json;
 
 Console.Title = "Robo Solicita Pipe Itau";
 
@@ -22,7 +23,7 @@ try
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
     tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
     tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
-    tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
+    tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());    
     tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
 
     Task.WhenAll(tasks).Wait();
@@ -46,7 +47,9 @@ void SoliciataReativacaoCota()
         foreach (var dado in dadosExcel)
         {
             var body = GenerateDefaultPublicFormJson("Reativação de cota", dado[0], dado[1], dado[2]);
-            var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+            var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+
+            CheckResult(result, "Reativação de cota");
         }
         ConsoleColorHelper.ConsoleWrite($"Reativação de cota: finalizado");
     }
@@ -68,7 +71,9 @@ void SolicitacaoExtratos()
         foreach (var dado in dadosExcel)
         {
             var body = GenerateDefaultPublicFormJson("Extrato", dado[0], dado[1], dado[2]);
-            var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+            var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+
+            CheckResult(result, "Solicitação de Extratos");
         }
         ConsoleColorHelper.ConsoleWrite($"Solicitação de Extratos: finalizado");
     }
@@ -89,7 +94,9 @@ void SolicitacaoAlteracaoValorCarta()
         foreach (var dado in dadosExcel)
         {
             var body = GenerateValorCartaPublicFormJson("Alteração do valor da carta", dado[0], dado[1], dado[5], dado[2], dado[3], dado[4]);
-            var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+            var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+
+            CheckResult(result, "Alteração do valor da carta");
         }
 
         ConsoleColorHelper.ConsoleWrite($"Alteração do valor da carta: finalizado");
@@ -112,7 +119,9 @@ void SolicitacaoBoletoLance()
         foreach (var dado in dadosExcel)
         {
             var body = GenerateDefaultPublicFormJson("Boleto de lance", dado[0], dado[1], dado[2]);
-            var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+            var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+
+            CheckResult(result, "Boleto de lance");
         }
 
         ConsoleColorHelper.ConsoleWrite($"Boleto de lance: finalizado");
@@ -135,7 +144,9 @@ void SolicitacaoFaturamentoEspecie()
         foreach (var dado in dadosExcel)
         {
             var body = GenerateFaturamentePublicFormJson("Faturamento em espécie", dado[0], dado[1], dado[3], dado[2], dado[4], dado[5]);
-            var result = RequestHelper.CreateRequest<dynamic, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+            var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
+
+            CheckResult(result, "Faturamente em especie");
         }
 
         ConsoleColorHelper.ConsoleWrite($"Faturamente em especie: finalizado");
@@ -145,6 +156,16 @@ void SolicitacaoFaturamentoEspecie()
 
         ConsoleColorHelper.ConsoleWriteException(e);
     }
+}
+
+void CheckResult(JsonElement result, string processo)
+{
+    var json = result.SerializeObjectToJsonAsync();
+    if (json.Contains("errors"))
+    {
+        var message = processo + ": " + json;
+        ConsoleColorHelper.ConsoleWrite(message, ConsoleColorHelper.Writes.Error);
+    }        
 }
 
 void SolicitacaoFaturamentoCotaExcluidaGE()
