@@ -23,7 +23,8 @@ try
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
     tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
     tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
-    tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());    
+    //tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
+    SolicitacaoFaturamentoEspecie();
     tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
 
     Task.WhenAll(tasks).Wait();
@@ -143,7 +144,8 @@ void SolicitacaoFaturamentoEspecie()
         ConsoleColorHelper.ConsoleWrite($"Faturamente em especie: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateFaturamentePublicFormJson("Faturamento em espécie", dado[0], dado[1], dado[3], dado[2], dado[4], dado[5]);
+            var dadosBancarios = dado[2].Trim();
+            var body = GenerateFaturamentePublicFormJson("Faturamento em espécie", dado[0], dado[1], dado[3], dado[4], dado[5], dadosBancarios);
             var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
 
             CheckResult(result, "Faturamente em especie");
