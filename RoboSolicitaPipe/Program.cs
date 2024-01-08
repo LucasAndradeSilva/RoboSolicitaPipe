@@ -2,6 +2,7 @@
 using RoboSolicitaPipe;
 using RoboSolicitaPipe.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 Console.Title = "Robo Solicita Pipe Itau";
 
@@ -19,7 +20,8 @@ var tasks = new Task[6];
 
 try
 {
-    tasks[0] = Task.Run(() => SoliciataReativacaoCota());
+    SoliciataReativacaoCota();
+    //tasks[0] = Task.Run(() => SoliciataReativacaoCota());
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
     tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
     tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
@@ -41,18 +43,18 @@ void SoliciataReativacaoCota()
 {
     try
     {
-        ConsoleColorHelper.ConsoleWrite("Iniciando metodo: Reativação de cota");
+        ConsoleColorHelper.ConsoleWrite("Iniciando metodo: Reativação da Cota");
         var dadosExcel = pathExcel.LerArquivoExcel("Reativação de cota");
 
-        ConsoleColorHelper.ConsoleWrite($"Reativação de cota: {dadosExcel.Count} dados encontrados!");
+        ConsoleColorHelper.ConsoleWrite($"Reativação da Cota: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateDefaultPublicFormJson("Reativação de cota", dado[0], dado[1], dado[2]);
+            var body = GenerateDefaultPublicFormJson("Reativação da Cota", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
 
-            CheckResult(result, "Reativação de cota");
+            CheckResult(result, "Reativação da Cota");
         }
-        ConsoleColorHelper.ConsoleWrite($"Reativação de cota: finalizado");
+        ConsoleColorHelper.ConsoleWrite($"Reativação da Cota: finalizado");
     }
     catch (Exception e)
     {
