@@ -19,12 +19,12 @@ var defaultUrlPipe = "https://itau.pipefy.com/public_api";
 var tasks = new Task[6];
 
 try
-{
-    SoliciataReativacaoCota();
-    //tasks[0] = Task.Run(() => SoliciataReativacaoCota());
+{    
+    tasks[0] = Task.Run(() => SoliciataReativacaoCota());
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
     tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
-    tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
+    //tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
+    SolicitacaoBoletoLance();
     tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
     tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
 
@@ -115,19 +115,19 @@ void SolicitacaoBoletoLance()
 {
     try
     {
-        ConsoleColorHelper.ConsoleWrite("Iniciando metodo: Boleto de lance");
+        ConsoleColorHelper.ConsoleWrite("Iniciando metodo: Boleto de Lance");
         var dadosExcel = pathExcel.LerArquivoExcel("Boleto de lance");
 
-        ConsoleColorHelper.ConsoleWrite($"Boleto de lance: {dadosExcel.Count} dados encontrados!");
+        ConsoleColorHelper.ConsoleWrite($"Boleto de Lance: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateDefaultPublicFormJson("Boleto de lance", dado[0], dado[1], dado[2]);
+            var body = GenerateDefaultPublicFormJson("Boleto de Lance", dado[0], dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
 
-            CheckResult(result, "Boleto de lance");
+            CheckResult(result, "Boleto de Lance");
         }
 
-        ConsoleColorHelper.ConsoleWrite($"Boleto de lance: finalizado");
+        ConsoleColorHelper.ConsoleWrite($"Boleto de Lance: finalizado");
     }
     catch (Exception e)
     {
