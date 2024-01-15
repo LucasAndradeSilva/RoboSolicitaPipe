@@ -24,8 +24,7 @@ try
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
     tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
     tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
-    //tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
-    SolicitacaoFaturamentoEspecie();
+    tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());    
     tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
 
     Task.WhenAll(tasks).Wait();
