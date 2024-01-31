@@ -22,7 +22,7 @@ try
 {    
     tasks[0] = Task.Run(() => SoliciataReativacaoCota());
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
-    tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
+    tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());    
     tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
     tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());    
     tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
@@ -95,7 +95,7 @@ void SolicitacaoAlteracaoValorCarta()
         ConsoleColorHelper.ConsoleWrite($"Alteração do valor da carta: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateValorCartaPublicFormJson("Alteração do valor da carta", dado[0], dado[1], dado[5], dado[2], dado[3], dado[4]);
+            var body = GenerateValorCartaPublicFormJson("Alteração do Valor da Carta", dado[0], dado[1], dado[5], dado[2], dado[3], dado[4]);
             var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
 
             CheckResult(result, "Alteração do valor da carta");
