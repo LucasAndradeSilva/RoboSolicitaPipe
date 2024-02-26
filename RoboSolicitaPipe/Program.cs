@@ -19,8 +19,9 @@ var defaultUrlPipe = "https://itau.pipefy.com/public_api";
 var tasks = new Task[6];
 
 try
-{    
-    tasks[0] = Task.Run(() => SoliciataReativacaoCota());
+{
+    //tasks[0] = Task.Run(() => SoliciataReativacaoCota());
+    SoliciataReativacaoCota();
     tasks[1] = Task.Run(() => SolicitacaoExtratos());
     tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());    
     tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
@@ -48,7 +49,7 @@ void SoliciataReativacaoCota()
         ConsoleColorHelper.ConsoleWrite($"Reativação da Cota: {dadosExcel.Count} dados encontrados!");
         foreach (var dado in dadosExcel)
         {
-            var body = GenerateDefaultPublicFormJson("Reativação da Cota", dado[0], dado[1], dado[2]);
+            var body = GenerateDefaultPublicFormJson("Reativação da Cota", dado[0].Trim(), dado[1], dado[2]);
             var result = RequestHelper.CreateRequest<JsonElement, dynamic>(defaultUrlPipe, HttpMethod.Post, body).GetAwaiter().GetResult();
 
             CheckResult(result, "Reativação da Cota");
