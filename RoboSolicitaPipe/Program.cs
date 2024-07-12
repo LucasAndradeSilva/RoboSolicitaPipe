@@ -18,20 +18,22 @@ var pathExcel = config.CaminhoExcel;
 var defaultUrlPipe = "https://itau.pipefy.com/public_api";
 var tasks = new Task[6];
 
+var query = "fragment ConnectedRepoItemFragment on PublicRepoItem {\r\n  id\r\n  title\r\n  created_at\r\n  path\r\n  url\r\n  uuid\r\n  icon {\r\n    color\r\n    name\r\n    __typename\r\n  }\r\n  status {\r\n    id\r\n    name\r\n    __typename\r\n  }\r\n  summary {\r\n    title\r\n    value\r\n    __typename\r\n  }\r\n  summary_attributes {\r\n    title\r\n    value\r\n    __typename\r\n  }\r\n  summary_fields {\r\n    title\r\n    value\r\n    type\r\n    __typename\r\n  }\r\n  __typename\r\n}\r\n\r\nmutation submitPublicForm($formId: ID!, $filledFields: [FilledField]!, $throughConnectors: ReferenceConnectorFieldInput, $publicFormSubmitterEmail: String, $captchaToken: String) {\r\n submitPublicForm(\r\n input: { formId: $formId, filledFields: $filledFields, throughConnectors: $throughConnectors, publicFormSubmitterEmail: $publicFormSubmitterEmail, captchaToken: $captchaToken}\r\n  ) {\r\n repoItem {\r\n...ConnectedRepoItemFragment\r\n __typename\r\n    }\r\n __typename\r\n  }\r\n}\r\n";
+
 try
 {
-    //tasks[0] = Task.Run(() => SoliciataReativacaoCota());    
-    //tasks[1] = Task.Run(() => SolicitacaoExtratos());
-    //tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());    
-    //tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
-    //tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());    
-    //tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
-    SoliciataReativacaoCota();
-    SolicitacaoExtratos();
-    SolicitacaoAlteracaoValorCarta();
-    SolicitacaoBoletoLance();
-    SolicitacaoFaturamentoEspecie();
-    SolicitacaoFaturamentoCotaExcluidaGE();
+    tasks[0] = Task.Run(() => SoliciataReativacaoCota());
+    tasks[1] = Task.Run(() => SolicitacaoExtratos());
+    tasks[2] = Task.Run(() => SolicitacaoAlteracaoValorCarta());
+    tasks[3] = Task.Run(() => SolicitacaoBoletoLance());
+    tasks[4] = Task.Run(() => SolicitacaoFaturamentoEspecie());
+    tasks[5] = Task.Run(() => SolicitacaoFaturamentoCotaExcluidaGE());
+    //SoliciataReativacaoCota();
+    //SolicitacaoExtratos();
+    //SolicitacaoAlteracaoValorCarta();
+    //SolicitacaoBoletoLance();
+    //SolicitacaoFaturamentoEspecie();
+    //SolicitacaoFaturamentoCotaExcluidaGE();
     Task.WhenAll(tasks).Wait();
 }
 catch (Exception e)
@@ -218,7 +220,7 @@ object GenerateDefaultPublicFormJson(string tipoSolicitacao, string email, strin
             captchaToken = "dasd51sa6",
             publicFormSubmitterEmail = email
         },
-        query = "fragment ConnectedRepoItemFragment on PublicRepoItem {\r\n  id\r\n  title\r\n  created_at\r\n  path\r\n  url\r\n  uuid\r\n  icon {\r\n    color\r\n    name\r\n    __typename\r\n  }\r\n  status {\r\n    id\r\n    name\r\n    __typename\r\n  }\r\n  summary {\r\n    title\r\n    value\r\n    __typename\r\n  }\r\n  summary_attributes {\r\n    title\r\n    value\r\n    __typename\r\n  }\r\n  summary_fields {\r\n    title\r\n    value\r\n    type\r\n    __typename\r\n  }\r\n  __typename\r\n}\r\n\r\nmutation submitPublicForm($formId: ID!, $filledFields: [FilledField]!, $throughConnectors: ReferenceConnectorFieldInput, $publicFormSubmitterEmail: String, $captchaToken: String) {\r\n  submitPublicForm(\r\n    input: {formId: $formId, filledFields: $filledFields, throughConnectors: $throughConnectors, publicFormSubmitterEmail: $publicFormSubmitterEmail, captchaToken: $captchaToken}\r\n  ) {\r\n    repoItem {\r\n      ...ConnectedRepoItemFragment\r\n      __typename\r\n    }\r\n    __typename\r\n  }\r\n}\r\n"
+        query
     };
 
     return publicForm;
@@ -247,7 +249,7 @@ object GenerateFaturamentePublicFormJson(string tipoSolicitacao, string email, s
             captchaToken = "",
             publicFormSubmitterEmail = email
         },
-        query = "mutation submitPublicForm($formId: ID!, $filledFields: [FilledField]!) {\n  submitPublicForm(input: {formId: $formId, filledFields: $filledFields}) {\n    repoItem {\n      id\n      uuid\n      __typename\n    }\n    __typename\n  }\n}\n"
+        query
     };
 
     return publicFormFaturamento;
@@ -275,7 +277,7 @@ object GenerateValorCartaPublicFormJson(string tipoSolicitacao, string email, st
             captchaToken = "",
             publicFormSubmitterEmail = email
         },
-        query = "mutation submitPublicForm($formId: ID!, $filledFields: [FilledField]!) {\n  submitPublicForm(input: {formId: $formId, filledFields: $filledFields}) {\n    repoItem {\n      id\n      uuid\n      __typename\n    }\n    __typename\n  }\n}\n"
+        query
     };
 
     return publicFormAlteracao;
